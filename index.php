@@ -18,6 +18,7 @@ define( 'WP_API_CORE'				, 'http://api.wordpress.org/core/version-check/1.7/?loc
 define( 'WPQI_CACHE_PATH'			, 'cache/' );
 define( 'WPQI_CACHE_CORE_PATH'		, WPQI_CACHE_PATH . 'core/' );
 define( 'WPQI_CACHE_PLUGINS_PATH'	, WPQI_CACHE_PATH . 'plugins/' );
+define( 'WPQI_ABSPATH'					, $_SERVER['DOCUMENT_ROOT'] );
 
 require( 'inc/functions.php' );
 
@@ -47,16 +48,8 @@ function captureCharacter($textChain) {
 	return $arrData; 
 }
 
-function rmdir_recursive($dir) {
-	foreach(scandir($dir) as $file) {
-		if ('.' === $file || '..' === $file) continue;
-		if (is_dir('$dir/$file')) rmdir_recursive('$dir/$file');
-		else unlink('$dir/$file');
-	}
-	rmdir($dir);
-}
-
 $directory = ! empty( $_POST['directory'] ) ? '../' . $_POST['directory'] . '/' : '../';
+$path = ! empty( $_POST['directory'] ) ? '/' . $_POST['directory'] . '/' : '/';
 
 if ( isset( $_GET['action'] ) ) {
 
@@ -119,12 +112,12 @@ if ( isset( $_GET['action'] ) ) {
 					rename(  'wordpress/' . $file, $directory . '/' . $file );
 				}
 
-				rmdir( 'wordpress' );
+				removeDirectory( 'wordpress' );
 				unlink( $directory . '/license.txt' );
 				unlink( $directory . '/licencia.txt' );
 				unlink( $directory . '/readme.html' );
 				unlink( $directory . '/wp-content/plugins/hello.php' );
-				rmdir_recursive( $directory . '/wp-content/plugins/akismet' );
+				removeDirectory( WPQI_ABSPATH . $path . 'wp-content/plugins/akismet' );
 			}
 
 			break;
@@ -297,6 +290,7 @@ if ( isset( $_GET['action'] ) ) {
 					}
 				}
 
+				delete_theme( 'twentyseventeen' );
 				delete_theme( 'twentysixteen' );
 				delete_theme( 'twentyfifteen' );
 				delete_theme( 'twentyfourteen' );
@@ -304,7 +298,6 @@ if ( isset( $_GET['action'] ) ) {
 				delete_theme( 'twentytwelve' );
 				delete_theme( 'twentyeleven' );
 				delete_theme( 'twentyten' );
-
 				delete_theme( '__MACOSX' );
 
 				break;
@@ -358,7 +351,7 @@ if ( isset( $_GET['action'] ) ) {
 				}
 
 				require_once( $directory . 'wp-load.php' );
-				require_once( $directory . 'wp-admin/includes/plugin.php');
+				require_once( $directory . 'wp-admin/includes/plugin.php' );
 
 				activate_plugins( array_keys( get_plugins() ) );
 
@@ -376,6 +369,8 @@ if ( isset( $_GET['action'] ) ) {
 
 				echo '<a href="' . admin_url() . '" class="button" style="margin-right:5px;" target="_blank">Iniciar sesión</a>';
 				echo '<a href="' . home_url() . '" class="button" target="_blank">Ir a la página de Inicio</a>';
+
+				removeDirectory( WPQI_ABSPATH . $path . 'wp-install', true );
 
 				break;
 	}
