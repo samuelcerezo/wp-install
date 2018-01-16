@@ -388,7 +388,7 @@ else { ?>
 		<link rel="stylesheet" href="assets/css/bootstrap.min.css" />
 	</head>
 	<body class="wp-core-ui">
-	<img src="assets/images/bilneador.png" style="width: 256px; display: block; margin: auto;" />
+	<img src="assets/images/bilneador.png" style="width: 200px; display: block; margin: 40px auto;" />
 		<?php
 		$parent_dir = realpath( dirname ( dirname( __FILE__ ) ) );
 		if ( is_writable( $parent_dir ) ) { ?>
