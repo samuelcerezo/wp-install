@@ -511,7 +511,7 @@ else { ?>
 							<label for="plugins">Plugins</label>
 						</th>
 						<td>
-							<input name="plugins" type="text" id="plugins" size="50" value="wordpress-seo; wordfence; google-analytics-dashboard-for-wp" />
+							<input name="plugins" type="text" id="plugins" size="50" value="wordpress-seo; wordfence; google-analytics-dashboard-for-wp; elementor" />
 							<p>Nombre utilizado en el repositorio de Wordpress, separados por punto y coma.</p>
 						</td>
 					</tr>
