@@ -93,7 +93,9 @@ if ( isset( $_GET['action'] ) ) {
 			$wp = json_decode( file_get_contents( WP_API_CORE . $language ) )->offers[0];
 
 			if ( ! empty( $directory ) ) {
-				mkdir( $directory );
+				if ( ! is_dir( $directory ) ) {
+					mkdir( $directory );
+				}
 				chmod( $directory , 0755 );
 			}
 
@@ -389,6 +391,7 @@ else { ?>
 	</head>
 	<body class="wp-core-ui">
 	<img src="assets/images/bilneador.png" style="width: 200px; display: block; margin: 40px auto;" />
+	<div id="errors"></div>
 		<?php
 		$parent_dir = realpath( dirname ( dirname( __FILE__ ) ) );
 		if ( is_writable( $parent_dir ) ) { ?>
@@ -419,7 +422,7 @@ else { ?>
 					</tr>
 					<tr>
 						<th scope="row"><label for="pwd">Contraseña</label></th>
-						<td><input name="pwd" id="pwd" type="text" size="25" /></td>
+						<td><input name="pwd" id="pwd" type="text" size="25" class="required" /></td>
 						<td>...y su contraseña</td>
 					</tr>
 					<tr>
@@ -474,7 +477,7 @@ else { ?>
 					<tr>
 						<th scope="row"><label for="user_login">Usuario</label></th>
 						<?php
-						$seed = captureCharacter('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_ .-,');
+						$seed = captureCharacter('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_ .-@');
 						shuffle($seed);
 						$rand = '';
 						foreach (array_rand($seed, 16) as $k) $rand .= $seed[$k];
