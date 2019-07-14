@@ -115,10 +115,10 @@ if (isset($_GET['action'])) {
 				}
 
 				removeDirectory('wordpress');
-				unlink($directory.'/license.txt');
-				unlink($directory.'/licencia.txt');
-				unlink($directory.'/readme.html');
-				unlink($directory.'/wp-content/plugins/hello.php');
+				unlink($directory.'license.txt');
+				unlink($directory.'licencia.txt');
+				unlink($directory.'readme.html');
+				unlink($directory.'wp-content/plugins/hello.php');
 				removeDirectory(WPQI_ABSPATH.$path.'wp-content/plugins/akismet');
 			}
 
@@ -137,12 +137,12 @@ if (isset($_GET['action'])) {
 				$key = 0;
 				foreach ($config_file as &$line) {
 
-					if ('$table_prefix  =' == substr($line, 0, 16)) {
-						$line = '$table_prefix  = \''.sanit($_POST[ 'prefix' ])."';\r\n";
+					if ('$table_prefix =' == substr($line, 0, 16)) {
+						$line = '$table_prefix = \''.sanit($_POST[ 'prefix' ])."';\r\n";
 						continue;
 					}
 
-					if (! preg_match('/^define\(\'([A-Z_]+)\',([ ]+)/', $line, $match)) {
+					if (! preg_match('/^define\(\s?\'([A-Z_]+)\',([ ]+)/', $line, $match)) {
 						continue;
 					}
 
@@ -152,7 +152,7 @@ if (isset($_GET['action'])) {
 						case 'WP_DEBUG'	   :
 
 							$line .= "\r\n\n "."/** Aumentar el límite de la memoria */"."\r\n";
-							$line .= "define('WP_MEMORY_LIMIT', '96M');"."\r\n";
+							$line .= "define('WP_MEMORY_LIMIT', '128M');"."\r\n";
 
 							break;
 						case 'DB_NAME'     :
@@ -309,6 +309,7 @@ if (isset($_GET['action'])) {
 
 				}
 
+				delete_theme('twentynineteen');
 				delete_theme('twentyseventeen');
 				delete_theme('twentysixteen');
 				delete_theme('twentyfifteen');
@@ -409,14 +410,14 @@ else { ?>
 			function set_plugins(theme) {
 				var plugins = 'wordpress-seo; wordfence; google-analytics-dashboard-for-wp; elementor';
 				if (theme == 'samuel.cerezo') {
-					plugins = plugins+'; wp-power-stats';
+					plugins = 'wordpress-seo; wordfence; elementor; wp-power-stats';
 				}
 				document.getElementById('plugins').value = plugins;
 			}
 		</script>
 	</head>
 	<body class="wp-core-ui">
-	<img src="assets/images/logo.png" style="width: 200px; display: block; margin: 40px auto;" />
+	<img src="assets/images/logo.png" style="width: 100px; display: block; margin: 40px auto;" />
 	<div id="errors"></div>
 		<?php
 		$parent_dir = realpath(dirname (dirname(__FILE__)));
