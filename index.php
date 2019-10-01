@@ -255,54 +255,13 @@ if (isset($_GET['action'])) {
 					$zip->extractTo($directory.'wp-content/themes/');
 					$zip->close();
 
-					if ($_POST['theme'] == 'samuel.cerezo') {
+					rename($directory.'wp-content/themes/'.$_POST['theme'].'-master', $directory.'wp-content/themes/'.$_POST['theme_directory']);
 
-						rename($directory.'wp-content/themes/'.$_POST['theme'].'-master', $directory.'wp-content/themes/'.$_POST['theme_directory']);
+					$theme_directory = $directory.'wp-content/themes/'.$_POST['theme_directory'];
 
-						$theme_directory = $directory.'wp-content/themes/'.$_POST['theme_directory'];
-
-						if (file_exists($theme_directory.'/style.css')) {
-							$content = file_get_contents($theme_directory.'/style.css');
-							file_put_contents($theme_directory.'/style.css', str_replace('{{NAME}}', $_POST['weblog_title'], $content));
-						}
-
-					} else {
-
-						rename($directory.'wp-content/themes/'.$_POST['theme'].'-master', $directory.'wp-content/themes/'.$_POST['theme']);
-
-						if (isset($_POST['theme_directory']) && $_POST['theme_directory'] != '') {
-
-							$theme_directory = $directory.'wp-content/themes/'.$_POST['theme_directory'];
-
-							if(! file_exists($theme_directory)) {
-								mkdir($theme_directory, 0755, true);
-							}
-
-							if(! file_exists($theme_directory.'/style.css')) {
-								$file = fopen($theme_directory.'/style.css' , 'w');
-								$txt = '';
-								$txt .= '/*'."\n";
-								$txt .= ' Theme Name:   '.$_POST['weblog_title']."\n";
-								$txt .= ' Theme URI:    '.home_url()."\n";
-								$txt .= ' Description:  Personalización web '.$_POST['weblog_title']."\n";
-								$txt .= ' Author:       bilnea'."\n";
-								$txt .= ' Author URI:   http://bilnea.com'."\n";
-								$txt .= ' Template:     bilnea'."\n";
-								$txt .= ' Version:      1.0'."\n";
-								$txt .= ' Text Domain:  '.$_POST['theme_directory']."\n";
-								$txt .= '*/'."\n";
-								$txt .= ''."\n";
-								$txt .= '@import url("../bilnea/style.css");'."\n";
-								file_put_contents($theme_directory.'/style.css', $txt);
-							}
-
-							if(! file_exists($theme_directory.'/functions.php')) {
-								$file = fopen($theme_directory.'/functions.php' , 'w');
-								file_put_contents($theme_directory.'/functions.php', null);
-							}
-
-						}
-
+					if (file_exists($theme_directory.'/style.css')) {
+						$content = file_get_contents($theme_directory.'/style.css');
+						file_put_contents($theme_directory.'/style.css', str_replace('{{NAME}}', $_POST['weblog_title'], $content));
 					}
 
 					switch_theme($_POST['theme_directory'], $_POST['theme_directory']);
@@ -406,15 +365,6 @@ else { ?>
 		<link rel="stylesheet" href="assets/css/style.min.css" />
 		<link rel="stylesheet" href="assets/css/buttons.min.css" />
 		<link rel="stylesheet" href="assets/css/bootstrap.min.css" />
-		<script type="text/javascript">
-			function set_plugins(theme) {
-				var plugins = 'wordpress-seo; wordfence; google-analytics-dashboard-for-wp; elementor';
-				if (theme == 'samuel.cerezo') {
-					plugins = 'wordpress-seo; wordfence; elementor; wp-power-stats';
-				}
-				document.getElementById('plugins').value = plugins;
-			}
-		</script>
 	</head>
 	<body class="wp-core-ui">
 	<img src="assets/images/logo.png" style="width: 100px; display: block; margin: 40px auto;" />
@@ -490,15 +440,6 @@ else { ?>
 					</tr>
 					<tr>
 						<th scope="row">
-							<label for="directory">Tema principal</label>
-						</th>
-						<td>
-							<label><input type="radio" checked name="theme" value="bilnea" onchange="set_plugins(this.value)"> bilnea</label><br />
-							<label><input type="radio" name="theme" value="samuel.cerezo" onchange="set_plugins(this.value)"> Tema propio</label>
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">
 							<label for="directory">Directorio del tema</label>
 						</th>
 						<td>
@@ -550,7 +491,7 @@ else { ?>
 							<label for="plugins">Plugins</label>
 						</th>
 						<td>
-							<input name="plugins" type="text" id="plugins" size="50" value="wordpress-seo; wordfence; google-analytics-dashboard-for-wp; elementor" />
+							<input name="plugins" type="text" id="plugins" size="50" value="wordpress-seo; wp-cerber; elementor; wp-power-stats" />
 							<p>Nombre utilizado en el repositorio de Wordpress, separados por punto y coma.</p>
 						</td>
 					</tr>
@@ -559,7 +500,7 @@ else { ?>
 							<label for="plugins">Otros plugins</label>
 						</th>
 						<td>
-							<label><input type="checkbox" id="plugins_premium" name="plugins_premium" value="1" /> Instalación de plugins propios</label>
+							<label><input type="checkbox" checked id="plugins_premium" name="plugins_premium" value="1" /> Instalación de plugins propios</label>
 							<p>Se instalarán los archivos zip alojados en el directorio <em>wp-install/plugins</em>.</p>
 						</td>
 					</tr>
