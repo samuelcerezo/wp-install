@@ -14,11 +14,11 @@ header('Content-Type: text/html; charset=UTF-8');
 
 @set_time_limit(0);
 
-define('WP_API_CORE'				, 'http://api.wordpress.org/core/version-check/1.7/?locale=');
-define('WPQI_CACHE_PATH'			, 'cache/');
-define('WPQI_CACHE_CORE_PATH'		, WPQI_CACHE_PATH.'core/');
-define('WPQI_CACHE_PLUGINS_PATH'	, WPQI_CACHE_PATH.'plugins/');
-define('WPQI_ABSPATH'					, $_SERVER['DOCUMENT_ROOT']);
+define('WP_API_CORE', 'http://api.wordpress.org/core/version-check/1.7/?locale=');
+define('WPQI_CACHE_PATH', 'cache/');
+define('WPQI_CACHE_CORE_PATH', WPQI_CACHE_PATH.'core/');
+define('WPQI_CACHE_PLUGINS_PATH', WPQI_CACHE_PATH.'plugins/');
+define('WPQI_ABSPATH', $_SERVER['DOCUMENT_ROOT']);
 
 require('inc/functions.php');
 
@@ -60,7 +60,7 @@ if (isset($_GET['action'])) {
 			$data = array();
 
 			try {
-			   $db = new PDO('mysql:host='. $_POST['dbhost'] .';dbname='.$_POST['dbname'] , $_POST['uname'], $_POST['pwd']);
+			   $db = new PDO('mysql:host='.$_POST['dbhost'].';dbname='.$_POST['dbname'], $_POST['uname'], $_POST['pwd']);
 			}
 			catch (Exception $e) {
 				$data['db'] = "error etablishing connection";
@@ -115,10 +115,17 @@ if (isset($_GET['action'])) {
 				}
 
 				removeDirectory('wordpress');
-				unlink($directory.'license.txt');
-				unlink($directory.'licencia.txt');
-				unlink($directory.'readme.html');
-				unlink($directory.'wp-content/plugins/hello.php');
+
+				foreach (array('license.txt', 'licencia.txt', 'readme.html', 'wp-content/plugins/hello.php') as $unlink) {
+
+					$unlink = $directory.$unlink;
+
+					if (file_exists($unlink)) {
+						unlink($unlink);
+					}
+
+				}
+
 				removeDirectory(WPQI_ABSPATH.$path.'wp-content/plugins/akismet');
 			}
 
@@ -135,10 +142,11 @@ if (isset($_GET['action'])) {
 				}
 
 				$key = 0;
+
 				foreach ($config_file as &$line) {
 
-					if ('$table_prefix =' == substr($line, 0, 16)) {
-						$line = '$table_prefix = \''.sanit($_POST[ 'prefix' ])."';\r\n";
+					if ('$table_prefix =' == substr($line, 0, 15)) {
+						$line = '$table_prefix = \''.sanit($_POST['prefix'])."';\r\n";
 						continue;
 					}
 
@@ -156,16 +164,16 @@ if (isset($_GET['action'])) {
 
 							break;
 						case 'DB_NAME'     :
-							$line = "define('DB_NAME', '".sanit($_POST[ 'dbname' ])."');\r\n";
+							$line = "define( 'DB_NAME', '".sanit($_POST[ 'dbname' ])."' );\r\n";
 							break;
 						case 'DB_USER'     :
-							$line = "define('DB_USER', '".sanit($_POST['uname'])."');\r\n";
+							$line = "define( 'DB_USER', '".sanit($_POST['uname'])."' );\r\n";
 							break;
 						case 'DB_PASSWORD' :
-							$line = "define('DB_PASSWORD', '".sanit($_POST['pwd'])."');\r\n";
+							$line = "define( 'DB_PASSWORD', '".sanit($_POST['pwd'])."' );\r\n";
 							break;
 						case 'DB_HOST'     :
-							$line = "define('DB_HOST', '".sanit($_POST['dbhost'])."');\r\n";
+							$line = "define( 'DB_HOST', '".sanit($_POST['dbhost'])."' );\r\n";
 							break;
 						case 'AUTH_KEY'         :
 						case 'SECURE_AUTH_KEY'  :
@@ -175,11 +183,11 @@ if (isset($_GET['action'])) {
 						case 'SECURE_AUTH_SALT' :
 						case 'LOGGED_IN_SALT'   :
 						case 'NONCE_SALT'       :
-							$line = "define('".$constant."', '".$secret_keys[$key++]."');\r\n";
+							$line = "define( '".$constant."', '".$secret_keys[$key++]."' );\r\n";
 							break;
 
 						case 'WPLANG' :
-							$line = "define('WPLANG', '".sanit($_POST['language'])."');\r\n";
+							$line = "define( 'WPLANG', '".sanit($_POST['language'])."' );\r\n";
 							break;
 					}
 				}
@@ -205,7 +213,7 @@ if (isset($_GET['action'])) {
 
 				require_once($directory.'wp-includes/wp-db.php');
 
-				wp_install($_POST[ 'weblog_title' ], $_POST['user_login'], $_POST['admin_email'], 0, '', $_POST['admin_password']);
+				wp_install($_POST['weblog_title'], $_POST['user_login'], $_POST['admin_email'], 0, '', $_POST['admin_password']);
 
 				$protocol = ! is_ssl() ? 'http' : 'https';
                 $get = basename(dirname(__FILE__)).'/index.php/wp-admin/install.php?action=install_wp';
@@ -389,17 +397,17 @@ else { ?>
 				<table class="form-table">
 					<tr>
 						<th scope="row"><label for="dbname">Nombre</label></th>
-						<td><input name="dbname" id="dbname" type="text" size="25" class="required" /></td>
+						<td><input name="dbname" id="dbname" type="text" size="25" class="required" value="KD7Twggq0nRNvMnB" /></td>
 						<td>Nombre de la base de datos</td>
 					</tr>
 					<tr>
 						<th scope="row"><label for="uname">Usuario</label></th>
-						<td><input name="uname" id="uname" type="text" size="25" class="required" /></td>
+						<td><input name="uname" id="uname" type="text" size="25" class="required" value="Bc4unwNsht45i03M" /></td>
 						<td>Usuario de la base datos</td>
 					</tr>
 					<tr>
 						<th scope="row"><label for="pwd">Contraseña</label></th>
-						<td><input name="pwd" id="pwd" type="text" size="25" class="required" /></td>
+						<td><input name="pwd" id="pwd" type="text" size="25" class="required" value="shAk_4)N^Z8izW^<f%9pbzZa" /></td>
 						<td>...y su contraseña</td>
 					</tr>
 					<tr>
@@ -443,7 +451,7 @@ else { ?>
 							<label for="directory">Directorio del tema</label>
 						</th>
 						<td>
-							<input name="theme_directory" type="text" id="theme_directory" size="25" value="" />
+							<input name="theme_directory" type="text" id="theme_directory" size="25" value="" class="required" />
 							<p>Directorio del tema. En minúsculas, sin acentos ni espacios.</p>
 						</td>
 					</tr>
@@ -479,7 +487,7 @@ else { ?>
 					</tr>
 					<tr>
 						<th scope="row"><label for="admin_email">Correo electrónico</label></th>
-						<td><input name="admin_email" type="text" id="admin_email" size="25" class="required" />
+						<td><input name="admin_email" type="text" id="admin_email" size="25" class="required" value="programacion@germinalbrandonlove.com" />
 						</td>
 					</tr>
 				</table>
@@ -491,7 +499,7 @@ else { ?>
 							<label for="plugins">Plugins</label>
 						</th>
 						<td>
-							<input name="plugins" type="text" id="plugins" size="50" value="wordpress-seo; wp-cerber; elementor; wp-power-stats" />
+							<input name="plugins" type="text" id="plugins" size="50" value="wordpress-seo; elementor; wp-power-stats" />
 							<p>Nombre utilizado en el repositorio de Wordpress, separados por punto y coma.</p>
 						</td>
 					</tr>
